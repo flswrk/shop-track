@@ -108,17 +108,17 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 .large{margin:.25rem 0 1rem .25rem;font-size:2.125rem;line-height:1.1;letter-spacing:-.026em;font-weight:700}
 
 .tiles{display:flex;gap:.625rem}
-.tile{flex:1;text-align:left;border-radius:1.25rem;padding:.875rem 1rem 1rem;position:relative;transition:transform .1s ease-out}
+.tile{flex:1;text-align:left;border-radius:1rem;padding:.625rem .75rem .75rem;position:relative;transition:transform .1s ease-out}
 .tile:active{transform:scale(.97)}
 .tile>*{display:block}
 .tile.b{background:var(--tb-bg);color:var(--tb-fg);--track:var(--tb-track);--fill-c:var(--tb-fill)}
 .tile.a{background:var(--ta-bg);color:var(--ta-fg);--track:var(--ta-track);--fill-c:var(--ta-fill)}
 .tile[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}
-.tile .lbl{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.tile .num{font-size:2.75rem;line-height:1.05;font-weight:700;letter-spacing:-.035em;margin-top:.25rem;font-variant-numeric:tabular-nums}
-.meter{height:.5rem;border-radius:.25rem;background:var(--track);margin-top:.625rem;overflow:hidden}
+.tile .lbl{font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tile .num{font-size:1.875rem;line-height:1.05;font-weight:700;letter-spacing:-.035em;margin-top:.125rem;font-variant-numeric:tabular-nums}
+.meter{height:.375rem;border-radius:.1875rem;background:var(--track);margin-top:.4375rem;overflow:hidden}
 .meter i{display:block;height:100%;border-radius:.25rem;background:var(--fill-c);transition:width .5s cubic-bezier(.2,.8,.2,1)}
-.tile .cap{font-size:.8125rem;letter-spacing:.005em;margin-top:.5rem}
+.tile .cap{font-size:.75rem;letter-spacing:.005em;margin-top:.375rem}
 
 /* segmented control */
 .seg{position:relative;display:flex;margin-top:1.25rem;padding:2px;border-radius:.625rem;background:var(--fill)}
@@ -198,6 +198,8 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 .srow.add{color:var(--blue);font-weight:600}
 .srow.add svg{flex:none}
 .theme .seg{margin-top:0}
+.back{display:inline-flex;align-items:center;gap:.25rem;height:2.75rem;margin:-.5rem 0 0 -.5rem;padding:0 .5rem;color:var(--blue);font-size:1.0625rem}
+.back:active{opacity:.4}
 
 /* tab bar + selection bar */
 .tabbar,.selbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--nav-bg);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);box-shadow:0 -.5px 0 var(--sep);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -259,6 +261,7 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 .field label{flex:none;width:4.25rem;font-size:.9375rem;color:var(--text2)}
 .field input,.field select{flex:1;min-width:0;height:3rem;border:0;background:transparent;outline:none;font-size:1rem;color:var(--text);-webkit-appearance:none;appearance:none}
 .field select{text-align:right;text-align-last:right;cursor:pointer}
+.field .fback{flex:none;height:2rem;padding:0 .5rem;margin-right:-.5rem;color:var(--blue);font-size:.9375rem}
 .field input[type="date"]{min-height:3rem}
 .field .pre{flex:none;color:var(--text2);font-size:1rem;margin-right:-.5rem}
 .recent{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem}
@@ -398,10 +401,9 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   <div class="sheet-body">
     <div class="inset">
       <div class="field"><label for="fItem">Item</label><input id="fItem" type="text" placeholder="What did you order?" autocomplete="off" autocapitalize="sentences" enterkeyhint="next"></div>
-      <div class="field"><label for="fStore">From</label><select id="fStore"></select></div>
-      <div class="field" id="fNewRow" hidden><label for="fNew">Shop</label><input id="fNew" type="text" placeholder="New shop name" autocomplete="off" autocapitalize="words" enterkeyhint="next"></div>
+      <div class="field"><label for="fStore">From</label><select id="fStore"></select><input id="fNew" type="text" placeholder="New shop name" autocomplete="off" autocapitalize="words" enterkeyhint="next" hidden><button type="button" class="fback" id="fNewBack" aria-label="Choose from existing shops" hidden>Shops</button></div>
       <div class="field"><label for="fAmt">Amount</label><span class="pre">₹</span><input id="fAmt" type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" placeholder="Optional" autocomplete="off" enterkeyhint="done"></div>
-      <div class="field"><label for="fMode">Paid via</label><select id="fMode"></select></div>
+      <div class="field"><label for="fMode">Paid via</label><select id="fMode"></select><input id="fModeNew" type="text" placeholder="New payment mode" autocomplete="off" autocapitalize="words" enterkeyhint="next" hidden><button type="button" class="fback" id="fModeBack" aria-label="Choose from existing payment modes" hidden>Modes</button></div>
       <div class="field"><label for="fDate">Date</label><input id="fDate" type="date"></div>
     </div>
     <button class="primary" id="fSave" type="button" disabled>Add order</button>
@@ -496,6 +498,7 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   var selecting = false, selected = {};
   var fShopVal = "", fPayVal = "";
   var editingId = null, detailId = null;
+  var manageKind = "mode", manageIdx = -1;
   var loaded = false, dbState = "connecting", dbMsg = "", pendingCount = 0, lastSync = 0, sawServer = false, offlineStore = true;
   var fb = null, unsubSnap = null, connectTimer = 0, outbox = [], settingsInit = false;
   var LKEY = "order-tracker-local-v1", useLocal = false, migrated = false;
@@ -784,7 +787,28 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
       return '<button class="srow" data-manage="' + kind + '" data-i="' + i + '"><span class="nm">' + esc(name) + '</span><span class="ct">' + (n ? n + (n === 1 ? " order" : " orders") : "Unused") + '</span>' + CHEV + '</button>';
     }).join("") + '<button class="srow add" data-manage="' + kind + '" data-i="-1">' + PLUS + (kind === "mode" ? "Add payment mode" : "Add shop") + '</button>';
   }
+  var subKind = null;
+  function subTitle(k){ return k === "mode" ? "Payment modes" : "Shops"; }
+  function setSub(k){
+    subKind = k;
+    $("navTitle").textContent = k ? subTitle(k) : "Settings";
+    window.scrollTo(0, 0);
+    document.documentElement.style.setProperty("--p", "0");
+    renderSettings();
+  }
+  function renderSubPage(){
+    var k = subKind;
+    $("viewSettings").innerHTML =
+      '<button class="back" data-back="1"><svg aria-hidden="true" width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1.5L2 9l7 7.5"/></svg>Settings</button>' +
+      '<h1 class="large">' + subTitle(k) + '</h1>' +
+      '<div class="group">' + listRows(k) + '</div>' +
+      '<p class="s-foot">' + (k === "mode" ? 'These appear in the Paid via menu when you add an order.' : 'Shops appear as quick picks when you add an order. New shops are added automatically.') + '</p>';
+  }
+  function manageRow(k, count){
+    return '<button class="srow" data-sub="' + k + '"><span class="nm">' + subTitle(k) + '</span><span class="ct">' + count + '</span>' + CHEV + '</button>';
+  }
   function renderSettings(){
+    if (subKind){ renderSubPage(); return; }
     $("viewSettings").innerHTML =
       '<h1 class="large">Settings</h1>' +
       '<div class="s-sec" style="margin-top:0">Appearance</div>' +
@@ -795,10 +819,8 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
         '<div class="srow"><span class="nm">Firebase project</span><span class="ct">' + esc(hasCfg ? (CFG.projectId || "") : "Not set up") + '</span></div>' +
         (pendingCount ? '<div class="srow"><span class="nm">Waiting to sync</span><span class="ct">' + pendingCount + '</span></div>' : '') + '</div>' +
       '<p class="s-foot">' + (dbState === "local" ? 'Your orders are saved in this browser. Connect Firebase to back them up and use more than one device. Orders already here move over automatically.' : 'Your orders live in your Firebase database. A copy is kept on this device so the app keeps working offline and syncs when the connection returns.') + '</p>' +
-      '<div class="s-sec">Payment modes</div><div class="group">' + listRows("mode") + '</div>' +
-      '<p class="s-foot">These appear in the Paid via menu when you add an order.</p>' +
-      '<div class="s-sec">Shops</div><div class="group">' + listRows("shop") + '</div>' +
-      '<p class="s-foot">Shops appear as quick picks when you add an order. New shops are added automatically.</p>' +
+      '<div class="s-sec">Manage</div><div class="group">' + manageRow("mode", settings.modes.length) + manageRow("shop", settings.shops.length) + '</div>' +
+      '<p class="s-foot">Edit the payment modes and shops used when you add an order.</p>' +
       '<p class="foot" id="setFoot"></p><p class="foot" style="margin-top:.25rem"><b>ShopTrack</b></p>';
     segTheme = Seg($("themeSeg"), ["light","dark","auto"], getTheme, setTheme);
     segTheme.place(false);
@@ -823,8 +845,9 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 
   /* ---------------- tabs ---------------- */
   function setTab(t){
+    if (t === tab && t === "settings" && subKind){ setSub(null); return; }
     if (t === tab) { window.scrollTo({top:0, behavior: reduce.matches ? "auto" : "smooth"}); return; }
-    tab = t; selecting = false; selected = {};
+    tab = t; selecting = false; selected = {}; subKind = null;
     $("viewOrders").hidden = t !== "orders"; $("viewSettings").hidden = t !== "settings";
     $("navTitle").textContent = t === "orders" ? "Orders" : "Settings";
     $("tabOrders").setAttribute("aria-selected", t === "orders"); $("tabSettings").setAttribute("aria-selected", t === "settings");
@@ -998,7 +1021,7 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   /* ---- order form ---- */
   var NEWSHOP = "__new__";
   function storeValue(){ var v = $("fStore").value; return v === NEWSHOP ? $("fNew").value.trim() : v; }
-  function syncNewRow(){ $("fNewRow").hidden = $("fStore").value !== NEWSHOP; }
+  function syncNewRow(){ var n = $("fStore").value === NEWSHOP; $("fStore").hidden = n; $("fNew").hidden = !n; $("fNewBack").hidden = !n || !settings.shops.length; }
   function validate(){ $("fSave").disabled = !($("fItem").value.trim() && storeValue()); }
   function shopChips(){ return settings.shops.slice().sort(byName); }
   function renderStores(sel){
@@ -1010,11 +1033,15 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
     $("fStore").value = sel || (all.length ? "" : NEWSHOP);
     syncNewRow();
   }
+  function modeValue(){ var v = $("fMode").value; return v === NEWSHOP ? $("fModeNew").value.trim() : v; }
+  function syncNewMode(){ var n = $("fMode").value === NEWSHOP; $("fMode").hidden = n; $("fModeNew").hidden = !n; $("fModeBack").hidden = !n; }
   function fillModes(sel){
     var opts = ['<option value="">None</option>'].concat(settings.modes.slice().sort(byName).map(function(m){ return '<option value="' + esc(m) + '">' + esc(m) + '</option>'; }));
     if (sel && !settings.modes.some(function(m){ return same(m, sel); })) opts.push('<option value="' + esc(sel) + '">' + esc(sel) + '</option>');
+    opts.push('<option value="' + NEWSHOP + '">+ New payment mode…</option>');
     $("fMode").innerHTML = opts.join("");
-    $("fMode").value = sel || "";
+    $("fMode").value = sel || ""; $("fModeNew").value = "";
+    syncNewMode();
   }
   function openForm(id){
     if (shDetailS.open) { shDetailS.hide(true); detailId = null; }
@@ -1037,10 +1064,12 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   }
   function saveForm(){
     var item = $("fItem").value.trim(), store = storeValue(), date = $("fDate").value || today();
-    var amt = parseAmt($("fAmt").value), mode = $("fMode").value;
+    var amt = parseAmt($("fAmt").value), mode = modeValue();
     if (!item || !store) return;
     var known = settings.shops.filter(function(s){ return same(s, store); })[0];
     if (known) store = known; else { settings.shops.push(store); saveSettings(); }
+    if (mode && !settings.modes.some(function(m){ return same(m, mode); })){ settings.modes.push(mode); saveSettings(); }
+    else if (mode) mode = settings.modes.filter(function(m){ return same(m, mode); })[0];
     try { if (mode) localStorage.setItem(MK, mode); } catch(e){}
     var o;
     if (editingId && (o = find(editingId))){
@@ -1061,6 +1090,10 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   }
   $("fItem").addEventListener("input", validate); $("fNew").addEventListener("input", validate);
   $("fStore").addEventListener("change", function(){ syncNewRow(); validate(); if ($("fStore").value === NEWSHOP) $("fNew").focus(); });
+  $("fMode").addEventListener("change", function(){ syncNewMode(); if ($("fMode").value === NEWSHOP) $("fModeNew").focus(); });
+  $("fModeBack").addEventListener("click", function(){ $("fMode").value = ""; $("fModeNew").value = ""; syncNewMode(); $("fMode").focus(); });
+  $("fModeNew").addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); $("fSave").click(); } });
+  $("fNewBack").addEventListener("click", function(){ $("fStore").value = ""; $("fNew").value = ""; syncNewRow(); validate(); $("fStore").focus(); });
   $("fNew").addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); $("fAmt").focus(); } });
   $("fItem").addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); $("fStore").focus(); } });
   $("fStore").addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); $("fAmt").focus(); } });
@@ -1173,6 +1206,8 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   $("mCancel").addEventListener("click", function(){ closeSheet(shManageS); });
   $("viewSettings").addEventListener("click", function(e){
     if (e.target.closest("[data-db]")){ openDb(); return; }
+    var sb = e.target.closest("[data-sub]"); if (sb){ setSub(sb.getAttribute("data-sub")); return; }
+    if (e.target.closest("[data-back]")){ setSub(null); return; }
     var b = e.target.closest("[data-manage]"); if (!b) return;
     openManage(b.getAttribute("data-manage"), parseInt(b.getAttribute("data-i"), 10));
   });
