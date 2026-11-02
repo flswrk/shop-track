@@ -91,6 +91,9 @@ try { var __t = localStorage.getItem("order-tracker-theme-v1"); if (__t === "lig
 :root{--f-pickedup:#a8141a;--t-pickedup:#9b1218}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--f-pickedup:#d63a3a;--t-pickedup:#ff7a7a}}
 :root[data-theme="dark"]{--f-pickedup:#d63a3a;--t-pickedup:#ff7a7a}
+:root{--tg-bg:#dff5e4;--tg-fg:#1d7a37;--tg-track:#b4e3bf;--tg-fill:#34c759;--tn-bg:#e5e5ea;--tn-fg:#58585d;--tn-track:#cfcfd4;--tn-fill:#8e8e93}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--tg-bg:#0f3318;--tg-fg:#5fdc7a;--tg-track:#1b5a2b;--tg-fill:#32d74b;--tn-bg:#2c2c2e;--tn-fg:#a1a1a6;--tn-track:#48484a;--tn-fill:#98989d}}
+:root[data-theme="dark"]{--tg-bg:#0f3318;--tg-fg:#5fdc7a;--tg-track:#1b5a2b;--tg-fill:#32d74b;--tn-bg:#2c2c2e;--tn-fg:#a1a1a6;--tn-track:#48484a;--tn-fill:#98989d}
 html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;background:var(--bg)}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:1rem;line-height:1.4;font-optical-sizing:auto;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
@@ -107,15 +110,18 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 .page{max-width:36rem;margin:0 auto;padding:2.75rem 1rem 9rem;will-change:transform}
 .large{margin:.25rem 0 1rem .25rem;font-size:2.125rem;line-height:1.1;letter-spacing:-.026em;font-weight:700}
 
-.tiles{display:flex;gap:.625rem}
-.tile{flex:1;text-align:left;border-radius:1rem;padding:.625rem .75rem .75rem;position:relative;transition:transform .1s ease-out}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
+.tile{text-align:left;border-radius:1rem;padding:.625rem .75rem .75rem;position:relative;transition:transform .1s ease-out}
 .tile:active{transform:scale(.97)}
 .tile>*{display:block}
+.tile .hd{display:flex;justify-content:space-between;align-items:baseline}
 .tile.b{background:var(--tb-bg);color:var(--tb-fg);--track:var(--tb-track);--fill-c:var(--tb-fill)}
+.tile.g{background:var(--tg-bg);color:var(--tg-fg);--track:var(--tg-track);--fill-c:var(--tg-fill)}
+.tile.n{background:var(--tn-bg);color:var(--tn-fg);--track:var(--tn-track);--fill-c:var(--tn-fill)}
 .tile.a{background:var(--ta-bg);color:var(--ta-fg);--track:var(--ta-track);--fill-c:var(--ta-fill)}
 .tile[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}
 .tile .lbl{font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.tile .num{font-size:1.875rem;line-height:1.05;font-weight:700;letter-spacing:-.035em;margin-top:.125rem;font-variant-numeric:tabular-nums}
+.tile .num{font-size:1.5rem;line-height:1.05;font-weight:700;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
 .meter{height:.375rem;border-radius:.1875rem;background:var(--track);margin-top:.4375rem;overflow:hidden}
 .meter i{display:block;height:100%;border-radius:.25rem;background:var(--fill-c);transition:width .5s cubic-bezier(.2,.8,.2,1)}
 .tile .cap{font-size:.75rem;letter-spacing:.005em;margin-top:.375rem}
@@ -340,13 +346,6 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   <div id="viewOrders">
     <h1 class="large">Orders</h1>
     <div class="tiles" id="tiles"></div>
-    <div class="seg" id="seg" role="tablist" aria-label="Filter orders">
-      <div class="thumb"></div>
-      <button role="tab" data-v="all">All</button>
-      <button role="tab" data-v="arriving">Arriving</button>
-      <button role="tab" data-v="refunds">Refunds</button>
-      <button role="tab" data-v="done">Done</button>
-    </div>
     <div class="filters" id="filters" hidden>
       <label class="fsel"><select id="fShop" aria-label="Filter by shop"></select></label>
       <label class="fsel"><select id="fPay" aria-label="Filter by payment mode"></select></label>
@@ -522,7 +521,7 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
     pickedup:{to:"returned", key:"pku"},
     refunded:{to:"pickedup", key:"ref"}
   };
-  var SECTITLE = {all:"All orders", arriving:"Arriving", refunds:"Refunds due", done:"Done"};
+  var SECTITLE = {all:"Active", arriving:"Arriving", refunds:"Refunds due", done:"Done"};
 
   function $(id){ return document.getElementById(id); }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
@@ -702,14 +701,17 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   }
   function renderTiles(){
     renderFilters();
-    var s = stats(), rtot = s.returned + s.refunded;
-    var p1 = s.total ? Math.round((s.total - s.ordered) / s.total * 100) : 0;
-    var p2 = rtot ? Math.round(s.refunded / rtot * 100) : 0;
-    var c1 = s.total ? (s.total - s.ordered) + " of " + s.total + " received" : "Nothing yet";
-    var c2 = !rtot ? "No returns" : (s.due > 0 ? s.refunded + " of " + rtot + " back · " + money(s.due) + " due" : s.refunded + " of " + rtot + " refunds back");
+    var s = stats(), rtot = s.returned + s.refunded, act = s.ordered + s.returned, done = s.total - act;
+    function pct(n, d){ return d ? Math.round(n / d * 100) : 0; }
+    function tile(cls, key, lbl, num, p, cap){
+      return '<button class="tile ' + cls + '" data-tile="' + key + '" aria-pressed="' + (filter === key) + '"><span class="hd"><span class="lbl">' + lbl + '</span><span class="num">' + num + '</span></span><span class="meter"><i style="width:' + p + '%"></i></span><span class="cap">' + cap + '</span></button>';
+    }
+    var c2 = !rtot ? "No returns" : (s.due > 0 ? money(s.due) + " due" : s.refunded + " of " + rtot + " back");
     $("tiles").innerHTML =
-      '<button class="tile b" data-tile="arriving" aria-pressed="' + (filter === "arriving") + '"><span class="lbl">Arriving</span><span class="num">' + s.ordered + '</span><span class="meter"><i style="width:' + p1 + '%"></i></span><span class="cap">' + c1 + '</span></button>' +
-      '<button class="tile a" data-tile="refunds" aria-pressed="' + (filter === "refunds") + '"><span class="lbl">Refunds due</span><span class="num">' + s.returned + '</span><span class="meter"><i style="width:' + p2 + '%"></i></span><span class="cap">' + c2 + '</span></button>';
+      tile("g", "all", "Active", act, pct(act, s.total), s.total ? act + " of " + s.total + " orders" : "Nothing yet") +
+      tile("b", "arriving", "Arriving", s.ordered, pct(s.total - s.ordered, s.total), s.total ? (s.total - s.ordered) + " of " + s.total + " received" : "Nothing yet") +
+      tile("a", "refunds", "Refunds", s.returned, pct(s.refunded, rtot), c2) +
+      tile("n", "done", "Done", done, pct(done, s.total), s.total ? done + " of " + s.total + " orders" : "Nothing yet");
     $("searchWrap").hidden = orders.length < 6;
     $("secTitle").textContent = SECTITLE[filter];
     $("selBtn").hidden = orders.length === 0;
@@ -865,9 +867,9 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
   }
   function setFilter(f){
     if (f === filter) return;
-    filter = f; pruneSelection(); renderTiles(); renderList(); renderSelbar(); segFilter.place(true);
+    filter = f; pruneSelection(); renderTiles(); renderList(); renderSelbar();
   }
-  segFilter = Seg($("seg"), FILTERS, function(){ return filter; }, setFilter);
+  segFilter = {place:function(){}};
   $("tiles").addEventListener("click", function(e){
     var t = e.target.closest("[data-tile]"); if (!t) return;
     var f = t.getAttribute("data-tile"); setFilter(filter === f ? "all" : f);
