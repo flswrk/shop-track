@@ -204,12 +204,42 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 .srow.add{color:var(--blue);font-weight:600}
 .srow.add svg{flex:none}
 .theme .seg{margin-top:0}
+.hero{background:var(--surface);border-radius:1.25rem;padding:1rem 1.25rem;box-shadow:var(--shadow)}
+.hero .lbl{font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text2)}
+.hero .big{font-size:2.5rem;line-height:1.1;font-weight:700;letter-spacing:-.03em;margin-top:.25rem;font-variant-numeric:tabular-nums}
+.hero .sub{display:flex;justify-content:space-between;gap:.75rem;margin-top:.5rem;font-size:.875rem;color:var(--text2)}
+.seg.dim{opacity:.45}
+.chart{display:flex;align-items:flex-end;gap:.75rem;height:7rem;margin-top:1rem}
+.chart.dense{gap:2px}
+.chart .col{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.chart .cb{flex:1;width:100%;display:flex;align-items:flex-end}
+.chart .cb i{display:block;width:100%;border-radius:6px 6px 2px 2px;background:var(--tb-track);min-height:0}
+.chart.dense .cb i{border-radius:3px 3px 1px 1px;background:var(--f-ordered)}
+.chart .cb i.hi{background:var(--f-ordered)}
+.chart .col span{font-size:.6875rem;color:var(--text2)}
+.cax{display:flex;justify-content:space-between;font-size:.6875rem;color:var(--text2);margin-top:.25rem}
+.chips{display:flex;gap:.5rem;margin-top:.5rem}
+.stchip{flex:1;min-width:0;border-radius:1rem;padding:.625rem .75rem}
+.stchip small{display:block;font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.stchip b{display:block;font-size:1.125rem;font-weight:700;margin-top:.125rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.stchip.b{background:var(--tb-bg);color:var(--tb-fg)}.stchip.g{background:var(--tg-bg);color:var(--tg-fg)}.stchip.a{background:var(--ta-bg);color:var(--ta-fg)}
+.stack{display:flex;gap:2px;height:.875rem;border-radius:.4375rem;overflow:hidden;margin-bottom:.25rem}
+.hrow{display:flex;align-items:center;gap:.625rem;margin-top:.75rem;font-size:.875rem}
+.hrow .n{width:5.75rem;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hrow .t{flex:1;height:.5rem;border-radius:.25rem;background:var(--fill);overflow:hidden}
+.hrow .t i{display:block;height:100%;border-radius:.25rem}
+.hrow b{flex:none;font-weight:600;font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;margin-right:.375rem}
+.srow .ct.amt{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.srow .bar{position:absolute;left:1rem;right:1rem;bottom:.375rem;height:3px;border-radius:2px;background:var(--fill)}
+.srow .bar i{display:block;height:100%;border-radius:2px;background:var(--tb-fill)}
+.srow.st{flex-wrap:wrap;padding-bottom:.5rem}
 .back{display:inline-flex;align-items:center;gap:.25rem;height:2.75rem;margin:-.5rem 0 0 -.5rem;padding:0 .5rem;color:var(--blue);font-size:1.0625rem}
 .back:active{opacity:.4}
 
 /* tab bar + selection bar */
 .tabbar,.selbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--nav-bg);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);box-shadow:0 -.5px 0 var(--sep);padding-bottom:env(safe-area-inset-bottom,0px)}
-.tabbar-in{max-width:36rem;margin:0 auto;height:4.25rem;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.tabbar-in{max-width:36rem;margin:0 auto;height:4.25rem;padding:0 2rem;display:flex;align-items:center;justify-content:space-between}
 .tab{width:4.5rem;height:3.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1875rem;color:var(--text2);font-size:.6875rem;font-weight:600;letter-spacing:.01em}
 .tab[aria-selected="true"]{color:var(--text)}
 .tab:active{opacity:.5}
@@ -237,6 +267,9 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 .inset{background:var(--bg);border-radius:.875rem;overflow:hidden}
 .field{display:flex;align-items:center;gap:.75rem;padding:0 1rem;min-height:3rem;position:relative}
 .dbstat{position:fixed;top:env(safe-area-inset-top,0px);right:.5rem;z-index:35;width:2.75rem;height:2.75rem;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text2)}
+.gear{position:fixed;top:env(safe-area-inset-top,0px);right:3.25rem;z-index:35;width:2.75rem;height:2.75rem;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text2)}
+.gear[aria-selected="true"]{color:var(--text)}
+.gear:active{opacity:.4}
 .dbstat:active{opacity:.4}
 .dbstat svg{width:1.5rem;height:1.5rem}
 .dbstat[data-s="synced"]{color:var(--t-received)}
@@ -339,6 +372,9 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 <body>
 <header class="nav" id="nav"><div class="nav-bg"></div><div class="nav-title" id="navTitle">Orders</div></header>
 
+<button class="gear" id="tabSettings" aria-label="Settings" aria-selected="false">
+  <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
+</button>
 <button class="dbstat" id="dbstat" aria-label="Database status"></button>
 <div class="setup" id="setup" hidden></div>
 
@@ -359,6 +395,7 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
     <div class="group" id="list" style="margin-top:.25rem"></div>
     <p class="foot" id="foot"></p>
   </div>
+  <div id="viewStats" hidden></div>
   <div id="viewSettings" hidden></div>
 </div>
 
@@ -371,9 +408,9 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
     <button class="addbtn" id="add" aria-label="Add order">
       <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
     </button>
-    <button class="tab" id="tabSettings" aria-selected="false">
-      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
-      Settings
+    <button class="tab" id="tabStats" aria-selected="false">
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20v-7M12 20V5M18 20v-11"/></svg>
+      Stats
     </button>
   </div>
 </nav>
@@ -833,6 +870,7 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
     renderTiles(); renderList(); renderFoot(); renderSelbar();
     if (segFilter) segFilter.place(false);
     if (tab === "settings") renderSettings();
+    if (tab === "stats") renderStats();
     if (detailId) { var o = find(detailId); if (o) fillDetail(o); else closeSheet(shDetailS); }
   }
 
@@ -845,19 +883,120 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
     if (segTheme) segTheme.place(true);
   }
 
+  /* ---------------- render: stats ---------------- */
+  function spendOf(o){ return (o.status === "ordered" || o.status === "received") && typeof o.amount === "number" ? o.amount : 0; }
+  function groupSpend(list, key){
+    var m = {};
+    list.forEach(function(o){ var v = spendOf(o); if (!v) return; var k = key(o) || "None"; m[k] = (m[k] || 0) + v; });
+    return Object.keys(m).map(function(k){ return {name:k, total:m[k]}; }).sort(function(a, b){ return b.total - a.total; });
+  }
+  function statRows(rows, fmtName){
+    if (!rows.length) return '<div class="srow"><span class="nm" style="color:var(--text2)">No spend yet</span></div>';
+    var max = rows[0].total;
+    return rows.map(function(r){
+      return '<div class="srow st"><span class="nm">' + esc(fmtName ? fmtName(r.name) : r.name) + '</span><span class="ct amt">' + money(r.total) + '</span><span class="bar"><i style="width:' + Math.max(2, Math.round(r.total / max * 100)) + '%"></i></span></div>';
+    }).join("");
+  }
+  var stRange = "3M", stMonth = "", stShop = "", stPay = "", segRange = null;
+  var RANGES = ["1M","3M","6M","1Y","All"], RMONTHS = {"1M":1,"3M":3,"6M":6,"1Y":12};
+  var PALETTE = ["var(--f-ordered)","var(--f-received)","var(--f-returned)","var(--f-pickedup)","var(--f-refunded)"];
+  function ym(d){ return d.getFullYear() + "-" + pad(d.getMonth() + 1); }
+  function addMonths(key, n){ var p = key.split("-"); return ym(new Date(+p[0], +p[1] - 1 + n, 1)); }
+  function monthLabel(k, short){ return parse(k + "-01").toLocaleDateString(undefined, short ? {month:"short"} : {month:"long", year:"numeric"}); }
+  function renderStats(){
+    var curM = today().slice(0, 7);
+    var scope = orders.filter(function(o){
+      return (!stShop || same(o.store, stShop)) && (!stPay || (stPay === "__none__" ? !o.mode : (o.mode && same(o.mode, stPay))));
+    });
+    var months = {}; orders.forEach(function(o){ months[String(o.date).slice(0, 7)] = 1; });
+    var monthList = Object.keys(months).sort().reverse();
+    if (stMonth && !months[stMonth]) monthList.unshift(stMonth);
+    var start, end, prevStart, prevEnd, label, prevLabel, daily = false;
+    if (stMonth){ start = end = stMonth; prevStart = prevEnd = addMonths(stMonth, -1); label = monthLabel(stMonth); prevLabel = monthLabel(prevStart, true); daily = true; }
+    else if (stRange === "All"){ start = ""; end = curM; label = "all time"; }
+    else { var n = RMONTHS[stRange]; end = curM; start = addMonths(curM, -(n - 1)); prevEnd = addMonths(start, -1); prevStart = addMonths(start, -n); label = n === 1 ? "this month" : "last " + n + " months"; prevLabel = "previous " + (n === 1 ? "month" : n + " months"); if (n === 1) daily = true; }
+    function inR(o, a, z){ var k = String(o.date).slice(0, 7); return (!a || k >= a) && (!z || k <= z); }
+    var cur = scope.filter(function(o){ return inR(o, start, end); });
+    var spend = 0, cnt = 0, pending = 0, noAmt = 0;
+    cur.forEach(function(o){
+      var v = spendOf(o); spend += v; if (v) cnt++;
+      if ((o.status === "returned" || o.status === "pickedup") && typeof o.amount === "number") pending += o.amount;
+      if (typeof o.amount !== "number") noAmt++;
+    });
+    var delta = "";
+    if (prevStart){
+      var prev = 0; scope.forEach(function(o){ if (inR(o, prevStart, prevEnd)) prev += spendOf(o); });
+      if (prev > 0){ var pc = Math.round((spend - prev) / prev * 100); delta = '<span style="color:' + (pc > 0 ? 'var(--danger)' : 'var(--go)') + ';font-weight:600">' + (pc > 0 ? '▲ ' : pc < 0 ? '▼ ' : '') + Math.abs(pc) + '%</span> vs ' + esc(prevLabel); }
+      else delta = 'No spend in ' + esc(prevLabel);
+    }
+    /* chart */
+    var bars = [], cm;
+    if (daily){
+      cm = stMonth || curM; var p = cm.split("-"), dim = new Date(+p[0], +p[1], 0).getDate();
+      for (var d = 1; d <= dim; d++) bars.push({k: cm + "-" + pad(d), v: 0, l: d});
+      cur.forEach(function(o){ bars.forEach(function(b){ if (b.k === o.date) b.v += spendOf(o); }); });
+    } else {
+      var first = start || (cur.length ? cur.map(function(o){ return String(o.date).slice(0, 7); }).sort()[0] : curM);
+      var k = first; while (k <= end && bars.length < 60){ bars.push({k:k, v:0, l:monthLabel(k, true)}); k = addMonths(k, 1); }
+      if (bars.length > 12) bars = bars.slice(-12);
+      cur.forEach(function(o){ var mk = String(o.date).slice(0, 7); bars.forEach(function(b){ if (b.k === mk) b.v += spendOf(o); }); });
+    }
+    var bmax = Math.max.apply(null, bars.map(function(b){ return b.v; }).concat([1]));
+    var chart = '<div class="chart' + (daily ? ' dense' : '') + '">' + bars.map(function(b, i){
+      var last = !daily && i === bars.length - 1, h = b.v ? Math.max(4, Math.round(b.v / bmax * 100)) : 0;
+      return '<div class="col"><div class="cb"><i' + (last ? ' class="hi"' : '') + ' style="height:' + h + '%"></i></div>' + (daily ? '' : '<span>' + esc(b.l) + '</span>') + '</div>';
+    }).join("") + '</div>' + (daily ? '<div class="cax"><span>1</span><span>' + bars.length + '</span></div>' : '');
+    /* groups */
+    function colorFor(i){ return PALETTE[i % PALETTE.length]; }
+    var shops = groupSpend(cur, function(o){ return o.store; }), modes = groupSpend(cur, function(o){ return o.mode; });
+    function bars2(rows, colored){
+      if (!rows.length) return '<p class="s-foot" style="margin:0">No spend in this view.</p>';
+      var max = rows[0].total;
+      return rows.map(function(r, i){
+        return '<div class="hrow"><span class="n">' + (colored ? '<i class="dot" style="background:' + colorFor(i) + '"></i>' : '') + esc(r.name) + '</span><span class="t"><i style="width:' + Math.max(3, Math.round(r.total / max * 100)) + '%;background:' + (colored ? colorFor(i) : 'var(--f-ordered)') + '"></i></span><b>' + money(r.total) + '</b></div>';
+      }).join("");
+    }
+    var stack = shops.length > 1 ? '<div class="stack">' + shops.map(function(r, i){ return '<i style="width:' + (r.total / spend * 100) + '%;background:' + colorFor(i) + '"></i>'; }).join("") + '</div>' : '';
+    function opts(list, sel, all){ return list.map(function(n){ return '<option value="' + esc(n[0]) + '"' + (n[0] === sel ? ' selected' : '') + '>' + esc(n[1]) + '</option>'; }).join(""); }
+    var shopNames = uniqNames(settings.shops.concat(orders.map(function(o){ return o.store; }))), modeNames = uniqNames(settings.modes.concat(orders.map(function(o){ return o.mode; })));
+    var mOpt = '<option value="">Any month</option>' + opts(monthList.map(function(k){ return [k, parse(k + "-01").toLocaleDateString(undefined, {month:"short", year:"numeric"})]; }), stMonth);
+    var sOpt = '<option value="">All shops</option>' + opts(shopNames.map(function(n){ return [n, n]; }), stShop);
+    var pOpt = '<option value="">All payments</option><option value="__none__"' + (stPay === "__none__" ? ' selected' : '') + '>No payment mode</option>' + opts(modeNames.map(function(n){ return [n, n]; }), stPay);
+    $("viewStats").innerHTML =
+      '<h1 class="large">Stats</h1>' +
+      '<div class="seg' + (stMonth ? ' dim' : '') + '" id="rangeSeg" role="tablist" aria-label="Range"><div class="thumb"></div>' + RANGES.map(function(r){ return '<button role="tab" data-v="' + r + '">' + r + '</button>'; }).join("") + '</div>' +
+      '<div class="filters"><label class="fsel' + (stMonth ? ' on' : '') + '"><select id="stMonth" aria-label="Month">' + mOpt + '</select></label><label class="fsel"><select id="stShop" aria-label="Shop">' + sOpt + '</select></label><label class="fsel"><select id="stPay" aria-label="Payment mode">' + pOpt + '</select></label></div>' +
+      '<div class="hero" style="margin-top:.75rem"><div class="lbl">Net spend · ' + esc(label) + '</div><div class="big">' + money(spend) + '</div>' +
+        (delta ? '<div class="sub"><span>' + delta + '</span></div>' : '') + chart + '</div>' +
+      '<div class="chips"><div class="stchip b"><small>Orders</small><b>' + cur.length + '</b></div><div class="stchip g"><small>Avg order</small><b>' + money(cnt ? Math.round(spend / cnt) : 0) + '</b></div><div class="stchip a"><small>Refund due</small><b>' + money(pending) + '</b></div></div>' +
+      (noAmt ? '<p class="s-foot">' + noAmt + (noAmt === 1 ? ' order has' : ' orders have') + ' no amount and count as ₹0.</p>' : '') +
+      '<div class="s-sec">By shop</div><div class="hero">' + stack + bars2(shops, true) + '</div>' +
+      '<div class="s-sec">By payment mode</div><div class="hero">' + bars2(modes, false) + '</div>' +
+      '<p class="s-foot">Spend is net of refunds. Returned and refunded orders count as ₹0.</p>';
+    segRange = Seg($("rangeSeg"), RANGES, function(){ return stRange; }, function(v){ stRange = v; stMonth = ""; renderStats(); });
+    segRange.place(false);
+  }
+  $("viewStats").addEventListener("change", function(e){
+    var id = e.target.id;
+    if (id === "stMonth") stMonth = e.target.value; else if (id === "stShop") stShop = e.target.value; else if (id === "stPay") stPay = e.target.value; else return;
+    renderStats();
+  });
+  window.addEventListener("resize", function(){ if (segRange && tab === "stats") segRange.place(false); });
+
   /* ---------------- tabs ---------------- */
   function setTab(t){
     if (t === tab && t === "settings" && subKind){ setSub(null); return; }
     if (t === tab) { window.scrollTo({top:0, behavior: reduce.matches ? "auto" : "smooth"}); return; }
     tab = t; selecting = false; selected = {}; subKind = null;
-    $("viewOrders").hidden = t !== "orders"; $("viewSettings").hidden = t !== "settings";
-    $("navTitle").textContent = t === "orders" ? "Orders" : "Settings";
-    $("tabOrders").setAttribute("aria-selected", t === "orders"); $("tabSettings").setAttribute("aria-selected", t === "settings");
+    $("viewOrders").hidden = t !== "orders"; $("viewStats").hidden = t !== "stats"; $("viewSettings").hidden = t !== "settings";
+    $("navTitle").textContent = t === "orders" ? "Orders" : t === "stats" ? "Stats" : "Settings";
+    $("tabOrders").setAttribute("aria-selected", t === "orders"); $("tabStats").setAttribute("aria-selected", t === "stats"); $("tabSettings").setAttribute("aria-selected", t === "settings");
     window.scrollTo(0, 0);
     document.documentElement.style.setProperty("--p", "0");
     render();
   }
   $("tabOrders").addEventListener("click", function(){ setTab("orders"); });
+  $("tabStats").addEventListener("click", function(){ setTab("stats"); });
   $("tabSettings").addEventListener("click", function(){ setTab("settings"); });
 
   /* ---------------- filters + search + selection ---------------- */
@@ -1429,7 +1568,7 @@ button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulati
 
   /* ---------------- setup screen (no Firebase config yet) ---------------- */
   function renderSetup(){
-    $("page").hidden = true; $("tabbar").hidden = true; $("dbstat").hidden = true;
+    $("page").hidden = true; $("tabbar").hidden = true; $("tabSettings").hidden = true; $("dbstat").hidden = true;
     var el = $("setup"); el.hidden = false;
     el.innerHTML = '<h1>Connect Firebase</h1><p>This app stores your orders in your own Firebase database and keeps working offline. It needs your Firebase config once.</p>' +
       '<ol><li>In the <b>Firebase console</b>, create a project and add a <b>Web app</b>. Copy its <code>firebaseConfig</code>.</li>' +
